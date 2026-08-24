@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Social Media Content Analyzer</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>Social Media Content Analyzer</h1>
+            <p>Analyze your content and get actionable engagement suggestions.</p>
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <!-- Upload Section -->
+        <section class="upload-section">
+
+            <div class="upload-card">
+
+                <div class="upload-icon">📄</div>
+
+                <h2>Upload Your Content</h2>
+
+                <p class="upload-description">
+                    Upload a PDF or image containing your social media content.
+                </p>
+
+                <div id="drop-zone" class="drop-zone">
+
+                    <p>Drag & Drop your file here</p>
+
+                    <span>or</span>
+
+                    <label for="file-input" class="browse-btn">
+                        Browse Files
+                    </label>
+
+                    <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" hidden>
+
+                    <small>
+                        Supported: PDF, JPG, JPEG, PNG · Maximum 10 MB
+                    </small>
+
+                </div>
+
+
+                <!-- Selected File -->
+                <div id="file-info" class="file-info hidden">
+
+                    <div>
+                        <strong id="file-name"></strong>
+                        <span id="file-size"></span>
+                    </div>
+
+                    <button id="remove-file" class="remove-btn">
+                        Remove
+                    </button>
+
+                </div>
+
+
+                <button id="analyze-btn" class="analyze-btn" disabled>
+                    Analyze Content
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- Loading Section -->
+        <section id="loading-section" class="loading-section hidden">
+
+            <div class="loading-card">
+
+                <div class="spinner"></div>
+
+                <h3>Analyzing your content...</h3>
+
+                <p id="loading-text">
+                    Extracting text...
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Error Section -->
+        <section id="error-section" class="error-section hidden">
+
+            <div class="error-card">
+
+                <h3>Something went wrong</h3>
+
+                <p id="error-message"></p>
+
+                <button id="try-again-btn">
+                    Try Again
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- Results Section -->
+        <section id="results-section" class="results-section hidden">
+
+            <div class="results-header">
+
+                <div>
+                    <h2>Analysis Results</h2>
+                    <p>Your content performance overview</p>
+                </div>
+
+                <button id="new-analysis-btn" class="secondary-btn">
+                    Analyze Another
+                </button>
+
+            </div>
+
+
+            <!-- Score -->
+            <div class="score-card">
+
+                <div class="score-circle">
+
+                    <span id="overall-score">0</span>
+
+                    <small>/100</small>
+
+                </div>
+
+                <div class="score-content">
+
+                    <h3>Overall Content Score</h3>
+
+                    <p id="score-label">
+                        Analyzing...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Metrics -->
+            <div class="metrics-grid">
+
+                <div class="metric-card">
+                    <span class="metric-icon">📝</span>
+                    <h4>Words</h4>
+                    <strong id="word-count">0</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span class="metric-icon">🔤</span>
+                    <h4>Characters</h4>
+                    <strong id="character-count">0</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span class="metric-icon">#</span>
+                    <h4>Hashtags</h4>
+                    <strong id="hashtag-count">0</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span class="metric-icon">@</span>
+                    <h4>Mentions</h4>
+                    <strong id="mention-count">0</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span class="metric-icon">❓</span>
+                    <h4>Questions</h4>
+                    <strong id="question-count">0</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span class="metric-icon">📢</span>
+                    <h4>CTA</h4>
+                    <strong id="cta-status">No</strong>
+                </div>
+
+            </div>
+
+
+            <!-- Scores -->
+            <div class="analysis-grid">
+
+                <div class="analysis-card">
+
+                    <h3>Engagement Score</h3>
+
+                    <div class="progress-container">
+                        <div id="engagement-progress" class="progress-bar">
+                        </div>
+                    </div>
+
+                    <strong id="engagement-score">0/100</strong>
+
+                </div>
+
+
+                <div class="analysis-card">
+
+                    <h3>Readability Score</h3>
+
+                    <div class="progress-container">
+                        <div id="readability-progress" class="progress-bar">
+                        </div>
+                    </div>
+
+                    <strong id="readability-score">0/100</strong>
+
+                </div>
+
+
+                <div class="analysis-card">
+
+                    <h3>Hook Score</h3>
+
+                    <div class="progress-container">
+                        <div id="hook-progress" class="progress-bar">
+                        </div>
+                    </div>
+
+                    <strong id="hook-score">0/100</strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Suggestions -->
+            <div class="suggestions-card">
+
+                <h2>💡 Improvement Suggestions</h2>
+
+                <div id="suggestions-list">
+                    <!-- Suggestions inserted by JavaScript -->
+                </div>
+
+            </div>
+
+
+            <!-- Extracted Text -->
+            <div class="text-card">
+
+                <h2>📄 Extracted Text</h2>
+
+                <div id="extracted-text">
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+        <p>
+            Social Media Content Analyzer
+        </p>
+
+    </footer>
+
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>
